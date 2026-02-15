@@ -13,11 +13,20 @@ const Navbar = ({ isAuth, user, onLogout }) => {
       // Fetch notification count
       const fetchNotifications = async () => {
         try {
-          const notifications = await notificationService.getNotifications();
-          const unreadCount = notifications.filter(n => !n.is_read).length;
-          setNotificationCount(unreadCount);
+          const result = await notificationService.getNotifications();
+
+          // Ensure we have valid data and it's an array
+          if (result && result.ok && result.data) {
+            const notifications = Array.isArray(result.data) ? result.data : [];
+            const unreadCount = notifications.filter(n => !n.is_read).length;
+            setNotificationCount(unreadCount);
+          } else {
+            // No valid notifications
+            setNotificationCount(0);
+          }
         } catch (error) {
           console.error('Error fetching notifications:', error);
+          setNotificationCount(0); // Reset count on error
         }
       };
 
@@ -33,25 +42,26 @@ const Navbar = ({ isAuth, user, onLogout }) => {
     onLogout();
   };
 
-  const handleNotificationClick = () => {
-    navigate('/notifications');
-  };
-
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="navbar-logo" onClick={() => navigate('/')}>
-          <span className="logo-icon">🎵</span>
-          <span className="logo-text">Spotify Clone</span>
+        <div className="navbar-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <span className="logo-icon">⚡</span>
+          <span className="logo-text">Pulse</span>
         </div>
 
         <div className="navbar-search">
           <input
             type="text"
             className="search-input"
-            placeholder="Search artists, concerts..."
+            placeholder="Search artists, tracks..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && searchQuery.trim()) {
+                navigate('/discover', { state: { searchQuery } });
+              }
+            }}
           />
         </div>
 
@@ -60,30 +70,42 @@ const Navbar = ({ isAuth, user, onLogout }) => {
             <>
               <button
                 className="notification-btn"
-                onClick={handleNotificationClick}
+                onClick={() => navigate('/notifications')}
                 title="Notifications"
+                style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', position: 'relative' }}
               >
                 🔔
                 {notificationCount > 0 && (
-                  <span className="notification-badge">{notificationCount}</span>
+                  <span className="notification-badge" style={{
+                    position: 'absolute', top: '-5px', right: '-5px',
+                    background: 'var(--secondary)', color: 'white',
+                    fontSize: '0.7rem', padding: '2px 5px', borderRadius: '50%'
+                  }}>
+                    {notificationCount}
+                  </span>
                 )}
               </button>
-              <div className="user-info">
-                <span className="user-name">{user?.username}</span>
+
+              <div className="user-profile-pill" style={{
+                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)',
+                borderRadius: '50px', border: '1px solid rgba(255,255,255,0.1)'
+              }}>
+                <div style={{ width: '30px', height: '30px', background: 'var(--gradient-main)', borderRadius: '50%' }}></div>
+                <span className="user-name">{user?.username || 'User'}</span>
               </div>
-              <button className="btn-logout" onClick={handleLogout}>
+
+              <button className="btn-logout" onClick={handleLogout} style={{
+                background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', padding: '0.5rem 1rem'
+              }}>
                 Logout
               </button>
             </>
           ) : (
-            <>
-              <a href="/login" className="btn-link">
-                Login
-              </a>
-              <a href="/signup" className="btn-primary">
-                Sign Up
-              </a>
-            </>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button onClick={() => navigate('/login')} className="btn-link" style={{ color: 'white' }}>Login</button>
+              <button onClick={() => navigate('/signup')} className="btn-primary" style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>Sign Up</button>
+            </div>
           )}
         </div>
       </div>

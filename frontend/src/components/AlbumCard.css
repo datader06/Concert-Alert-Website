@@ -1,18 +1,10 @@
+/* AlbumCard specific overrides */
 .album-card {
-    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(255, 255, 255, 0.05);
     position: relative;
+    /* Other properties inherited from global .album-card in index.css */
 }
 
-.album-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 16px 40px rgba(29, 185, 84, 0.25);
-    border-color: rgba(29, 185, 84, 0.3);
-}
+/* Hover effects are handled globally */
 
 /* Album Cover */
 .album-cover {

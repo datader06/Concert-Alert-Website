@@ -19,6 +19,9 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
+// Context
+import { ToastProvider } from './context/ToastContext';
+
 // Hooks
 import { useAuth } from './hooks/useAuth';
 
@@ -55,42 +58,44 @@ function App() {
   }
 
   return (
-    <Router>
-      {authState ? (
-        <>
-          <Navbar
-            isAuth={authState}
-            user={user}
-            onLogout={handleLogout}
-          />
-          <div className="app-container">
-            <Sidebar
+    <ToastProvider>
+      <Router>
+        {authState ? (
+          <>
+            <Navbar
               isAuth={authState}
+              user={user}
+              onLogout={handleLogout}
             />
-            <main className="main-content">
-              <Breadcrumbs />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/artist/:id" element={<ArtistDetail />} />
-                <Route path="/discover" element={<Discover />} />
-                <Route path="/concerts" element={<Concerts />} />
-                <Route path="/albums" element={<Albums />} />
-                <Route path="/favorites" element={<Favorites />} />
-                <Route path="/notifications" element={<Notifications />} />
-                <Route path="/profile" element={<Profile user={user} />} />
-                <Route path="*" element={<Navigate to="/" />} />
-              </Routes>
-            </main>
-          </div>
-        </>
-      ) : (
-        <Routes>
-          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
-          <Route path="/signup" element={<Signup onSignupSuccess={handleLoginSuccess} />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      )}
-    </Router>
+            <div className="app-container">
+              <Sidebar
+                isAuth={authState}
+              />
+              <main className="main-content">
+                <Breadcrumbs />
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/artist/:id" element={<ArtistDetail />} />
+                  <Route path="/discover" element={<Discover />} />
+                  <Route path="/concerts" element={<Concerts />} />
+                  <Route path="/albums" element={<Albums />} />
+                  <Route path="/favorites" element={<Favorites />} />
+                  <Route path="/notifications" element={<Notifications />} />
+                  <Route path="/profile" element={<Profile user={user} />} />
+                  <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+              </main>
+            </div>
+          </>
+        ) : (
+          <Routes>
+            <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+            <Route path="/signup" element={<Signup onSignupSuccess={handleLoginSuccess} />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Routes>
+        )}
+      </Router>
+    </ToastProvider>
   );
 }
 

@@ -168,14 +168,18 @@ const Home = () => {
     <div className="home-page">
       <section className="hero-section">
         <div className="hero-content">
-          <h1>🎵 Discover Your Music</h1>
-          <p>Find your favorite artists, explore new releases, and get concert alerts</p>
+          <span className="hero-tag">Live the Music</span>
+          <h1>Feel the Pulse<br />of the City</h1>
+          <p>Discover your next favorite artist and never miss a beat.</p>
+          <button className="btn-primary" style={{ marginTop: '2rem' }} onClick={() => document.querySelector('.trending-section')?.scrollIntoView({ behavior: 'smooth' })}>
+            Start Listening
+          </button>
         </div>
       </section>
 
       {/* Trending Artists Section */}
       <section className="trending-section">
-        <h2>Popular Artists</h2>
+        <h2 className="section-title">Trending Artists</h2>
         {loading ? (
           <div className="artists-grid">
             <SkeletonLoader type="artist-card" count={6} />
@@ -202,7 +206,7 @@ const Home = () => {
 
       {/* New Releases Section */}
       <section className="releases-section">
-        <h2>🎧 New Releases</h2>
+        <h2 className="section-title">New Releases</h2>
 
         {releasesLoading ? (
           <div className="albums-grid">

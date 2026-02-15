@@ -2,32 +2,17 @@
 
 /* Home Page Layout */
 .home-page {
-    padding-bottom: 40px;
+    padding-bottom: 4rem;
 }
+
+/* Styles moved to index.css for global reuse,
+   but specific Home page tweaks go here */
 
 /* Hero Section */
+/* Styles handled in index.css */
 .hero-section {
-    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-    padding: 80px 20px;
-    text-align: center;
-    border-radius: 12px;
-    margin: 20px;
-    border: 1px solid rgba(29, 185, 84, 0.2);
-}
-
-.hero-content h1 {
-    font-size: 3rem;
-    margin: 0 0 16px 0;
-    background: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.hero-content p {
-    font-size: 1.25rem;
-    color: #b3b3b3;
-    margin: 0;
+    /* valid overrides if needed */
+    margin-top: 0;
 }
 
 /* Trending Section */

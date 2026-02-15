@@ -25,44 +25,64 @@ const ArtistDetail = () => {
         setLoading(true);
         setError(null);
 
+        // Safety timeout to prevent infinite loading
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Timeout')), 5000)
+        );
+
         try {
-            // Fetch artist details
-            const artistResult = await artistService.getArtistMetadata(id, 'spotify');
+            // Race between fetch and timeout
+            const loadPromise = async () => {
+                // Fetch artist details
+                const artistResult = await artistService.getArtistMetadata(id, 'spotify');
 
-            if (!artistResult.ok || !artistResult.data) {
-                setError('Artist not found');
-                setLoading(false);
-                return;
-            }
+                if (!artistResult.ok || !artistResult.data) {
+                    throw new Error('Artist not found');
+                }
 
-            const artistData = {
-                id: artistResult.data.spotifyId,
-                name: artistResult.data.name,
-                genre: artistResult.data.genres?.[0] || 'Music',
-                image_url: artistResult.data.images?.[0]?.url || '',
-                listeners: artistResult.data.followers || 0,
-                bio: artistResult.data.bio || `${artistResult.data.name} is a popular artist.`,
-                spotifyData: artistResult.data
+                const artistData = {
+                    id: artistResult.data.spotifyId || id,
+                    name: artistResult.data.name,
+                    genre: artistResult.data.genres?.[0] || 'Music',
+                    image_url: artistResult.data.images?.[0]?.url || '',
+                    listeners: artistResult.data.followers || 0,
+                    bio: artistResult.data.bio || `${artistResult.data.name} is a popular artist.`,
+                    spotifyData: artistResult.data
+                };
+
+                setArtist(artistData);
+
+                // Fetch albums (non-blocking for main display)
+                artistService.getArtistAlbums(id).then(albumsResult => {
+                    if (albumsResult.ok && albumsResult.data) {
+                        setAlbums(albumsResult.data.albums || []);
+                    }
+                });
+
+                // Fetch concerts (non-blocking)
+                concertService.getArtistConcerts(id, artistData.name).then(concertsResult => {
+                    if (concertsResult.ok && concertsResult.data) {
+                        const concertsData = concertsResult.data.concerts || concertsResult.data;
+                        setConcerts(Array.isArray(concertsData) ? concertsData : []);
+                    }
+                });
             };
 
-            setArtist(artistData);
-
-            // Fetch albums
-            const albumsResult = await artistService.getArtistAlbums(id);
-            if (albumsResult.ok && albumsResult.data) {
-                setAlbums(albumsResult.data.albums || []);
-            }
-
-            // Fetch concerts
-            const concertsResult = await concertService.getArtistConcerts(id, artistData.name);
-            if (concertsResult.ok && concertsResult.data) {
-                const concertsData = concertsResult.data.concerts || concertsResult.data;
-                setConcerts(Array.isArray(concertsData) ? concertsData : []);
-            }
+            await Promise.race([loadPromise(), timeoutPromise]);
 
         } catch (err) {
             console.error('Error loading artist data:', err);
-            setError('Failed to load artist data');
+            if (err.message === 'Timeout') {
+                // Try one last desperate fallback on timeout if we have an ID
+                const fallback = await artistService.getArtist(id); // Use simpler endpoint
+                if (fallback.ok && fallback.data) {
+                    setArtist(fallback.data);
+                } else {
+                    setError('Artist data timed out. Please try again.');
+                }
+            } else {
+                setError('Failed to load artist data');
+            }
         } finally {
             setLoading(false);
         }
