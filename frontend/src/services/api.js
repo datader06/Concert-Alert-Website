@@ -169,6 +169,42 @@ export const artistService = {
       console.error('Error removing favorite:', error);
       return { ok: false, error: error.message };
     }
+  },
+
+  // NEW: Get artist metadata (Spotify + MusicBrainz)
+  getArtistMetadata: async (artistId, source = 'spotify') => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/artists/${artistId}/metadata?source=${source}`);
+      const data = await response.json();
+      return { ok: response.ok, data };
+    } catch (error) {
+      console.error('Error fetching artist metadata:', error);
+      return { ok: false, error: error.message };
+    }
+  },
+
+  // NEW: Get artist albums
+  getArtistAlbums: async (artistId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/artists/${artistId}/albums`);
+      const data = await response.json();
+      return { ok: response.ok, data };
+    } catch (error) {
+      console.error('Error fetching artist albums:', error);
+      return { ok: false, error: error.message };
+    }
+  },
+
+  // NEW: Get latest releases
+  getLatestReleases: async (artistId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/artists/${artistId}/latest-releases`);
+      const data = await response.json();
+      return { ok: response.ok, data };
+    } catch (error) {
+      console.error('Error fetching latest releases:', error);
+      return { ok: false, error: error.message };
+    }
   }
 };
 

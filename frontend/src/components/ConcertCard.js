@@ -8,6 +8,11 @@ const ConcertCard = ({ concert, onClickDetails }) => {
     <div className="concert-card" onClick={() => onClickDetails(concert.id)}>
       <div className="concert-header">
         <h3 className="concert-artist">{concert.artist_name || concert.event_name}</h3>
+        {concert.source && (
+          <span className={`concert-source-badge ${concert.source}`}>
+            {concert.source === 'ticketmaster' ? '🎫 Ticketmaster' : concert.source}
+          </span>
+        )}
       </div>
 
       <div className="concert-details">

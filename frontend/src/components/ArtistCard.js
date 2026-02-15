@@ -14,11 +14,11 @@ const ArtistCard = ({ artist, onArtistClick, onFavoriteClick, isFavorited }) => 
       <div className="artist-info">
         <h3 className="artist-name">{artist.name}</h3>
         {artist.genre && <p className="artist-genre">{artist.genre}</p>}
-        {artist.listeners && (
-          <p className="artist-listeners">
-            {(artist.listeners / 1000000).toFixed(1)}M listeners
-          </p>
-        )}
+        <p className="artist-listeners">
+          {artist.listeners && artist.listeners > 0
+            ? `${(artist.listeners / 1000000).toFixed(1)}M listeners`
+            : 'Popular Artist'}
+        </p>
       </div>
       <div className="artist-actions">
         <button

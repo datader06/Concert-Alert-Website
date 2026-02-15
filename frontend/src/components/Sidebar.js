@@ -28,6 +28,11 @@ const Sidebar = ({ isAuth }) => {
                 🎪 Concerts
               </Link>
             </li>
+            <li>
+              <Link to="/albums" className={`menu-item ${isActive('/albums') ? 'active' : ''}`}>
+                📀 Albums
+              </Link>
+            </li>
           </ul>
         </div>
 

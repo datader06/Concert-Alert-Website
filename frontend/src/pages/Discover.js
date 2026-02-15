@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Pages.css';
 import ArtistCard from '../components/ArtistCard';
+import SkeletonLoader from '../components/SkeletonLoader';
+import EmptyState from '../components/EmptyState';
 import { artistService } from '../services/api';
 
 const Discover = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,7 +20,10 @@ const Discover = () => {
     setLoading(true);
     setLastSearched(searchQuery);
     try {
+      console.log('Searching for:', searchQuery);
       const result = await artistService.searchArtists(searchQuery);
+      console.log('Search result:', result);
+
       if (result.ok && result.data) {
         setSearchResults(result.data);
       } else {
@@ -30,6 +37,20 @@ const Discover = () => {
     }
   };
 
+  const handleArtistClick = (id) => {
+    console.log('Navigating to artist:', id);
+    navigate(`/artist/${id}`);
+  };
+
+  const handleFavoriteToggle = async (id) => {
+    try {
+      console.log('Toggling favorite:', id);
+      await artistService.addFavorite(id);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
+
   return (
     <div className="discover-page">
       <h1>🔍 Discover Artists</h1>
@@ -37,7 +58,7 @@ const Discover = () => {
       <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"
-          placeholder="Search for artists, genres..."
+          placeholder="Search for artists (e.g., Taylor Swift, Drake)..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"
@@ -48,31 +69,33 @@ const Discover = () => {
       </form>
 
       {loading ? (
-        <div className="loading">Searching...</div>
+        <div className="artists-grid">
+          <SkeletonLoader type="artist-card" count={6} />
+        </div>
       ) : searchResults.length > 0 ? (
         <div className="artists-grid">
           {searchResults.map(artist => (
             <ArtistCard
               key={artist.id}
               artist={artist}
-              onArtistClick={(id) => {
-                console.log('View artist:', id);
-              }}
-              onFavoriteClick={(id) => {
-                console.log('Toggle favorite:', id);
-              }}
+              onArtistClick={handleArtistClick}
+              onFavoriteClick={handleFavoriteToggle}
               isFavorited={false}
             />
           ))}
         </div>
       ) : lastSearched ? (
-        <div className="empty-state">
-          <p>No artists found for "{lastSearched}"</p>
-        </div>
+        <EmptyState
+          icon="🔍"
+          title="No artists found"
+          message={`No results for "${lastSearched}". Try searching for popular artists like Taylor Swift, Drake, or Ariana Grande.`}
+        />
       ) : (
-        <div className="empty-state">
-          <p>Start typing to search for artists!</p>
-        </div>
+        <EmptyState
+          icon="🎵"
+          title="Start discovering"
+          message="Search for your favorite artists above!"
+        />
       )}
     </div>
   );

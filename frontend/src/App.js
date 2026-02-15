@@ -5,11 +5,14 @@ import './styles/index.css';
 // Components
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
+import Breadcrumbs from './components/Breadcrumbs';
 
 // Pages
 import Home from './pages/Home';
+import ArtistDetail from './pages/ArtistDetail';
 import Discover from './pages/Discover';
 import Concerts from './pages/Concerts';
+import Albums from './pages/Albums';
 import Favorites from './pages/Favorites';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
@@ -65,10 +68,13 @@ function App() {
               isAuth={authState}
             />
             <main className="main-content">
+              <Breadcrumbs />
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/artist/:id" element={<ArtistDetail />} />
                 <Route path="/discover" element={<Discover />} />
                 <Route path="/concerts" element={<Concerts />} />
+                <Route path="/albums" element={<Albums />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/profile" element={<Profile user={user} />} />

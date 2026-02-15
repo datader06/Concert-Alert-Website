@@ -1,0 +1,207 @@
+/* Albums Page Styles */
+
+.albums-page {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.albums-header {
+    margin-bottom: 2rem;
+}
+
+.albums-header h1 {
+    font-size: 3rem;
+    margin: 0 0 0.5rem 0;
+    background: linear-gradient(135deg, #1db954, #1ed760);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.albums-subtitle {
+    color: #b3b3b3;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Controls */
+.albums-controls {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.search-bar {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #1db954;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.search-input::placeholder {
+    color: #b3b3b3;
+}
+
+.clear-search {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.2s;
+}
+
+.clear-search:hover {
+    color: #fff;
+}
+
+.filters-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 150px;
+}
+
+.filter-group label {
+    color: #b3b3b3;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.filter-select {
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #1db954;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.filter-select option {
+    background: #181818;
+    color: #fff;
+}
+
+.btn-clear-filters {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-clear-filters:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #1db954;
+}
+
+.albums-count {
+    color: #b3b3b3;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+/* Albums Grid */
+.albums-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Loading State */
+.albums-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 1rem;
+}
+
+.albums-loading p {
+    color: #b3b3b3;
+    font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .albums-page {
+        padding: 1rem;
+    }
+
+    .albums-header h1 {
+        font-size: 2rem;
+    }
+
+    .albums-controls {
+        padding: 1rem;
+    }
+
+    .filters-row {
+        flex-direction: column;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .btn-clear-filters {
+        width: 100%;
+    }
+
+    .albums-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .albums-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

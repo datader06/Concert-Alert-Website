@@ -3,9 +3,10 @@
  * Enhanced with artist resolution capabilities
  */
 
-const artistService = require('../services/artistService');
-const artistResolverService = require('../services/artistService');
 const spotifyService = require('../services/spotifyService');
+const musicbrainzService = require('../services/musicbrainzService');
+const artistService = require('../services/artistService');
+const lastfmService = require('../services/lastfmService');
 
 /**
  * GET /api/artists/trending
@@ -152,15 +153,26 @@ const getArtistAlbums = async (req, res) => {
 
     const albums = await spotifyService.getArtistAlbums(id, types, parseInt(limit));
 
-    res.json({
-      artistId: id,
-      total: albums.length,
-      albums
-    });
+    // If Spotify returns empty albums, try Last.fm as fallback
+    if (!albums || albums.length === 0) {
+      console.log(`[Controller] Spotify returned no albums for ${id}, trying Last.fm fallback`);
 
+      // Get artist name from Spotify first
+      const artistInfo = await spotifyService.getArtistById(id);
+      if (artistInfo && artistInfo.name) {
+        const lastfmAlbums = await lastfmService.getArtistTopAlbums(artistInfo.name, parseInt(limit));
+
+        if (lastfmAlbums && lastfmAlbums.length > 0) {
+          console.log(`[Controller] Found ${lastfmAlbums.length} albums from Last.fm for ${artistInfo.name}`);
+          return res.json({ albums: lastfmAlbums, source: 'lastfm' });
+        }
+      }
+    }
+
+    res.json({ albums, source: 'spotify' });
   } catch (error) {
     console.error('Error in getArtistAlbums:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Failed to fetch artist albums' });
   }
 };
 
@@ -171,22 +183,43 @@ const getArtistAlbums = async (req, res) => {
 const getLatestReleases = async (req, res) => {
   try {
     const { id } = req.params;
+    const { limit = 10 } = req.query;
 
     const albums = await spotifyService.getArtistAlbums(id, 'album,single', 50);
 
-    // Filter to last 6 months
+    // Filter for recent releases (last 6 months)
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
     const recentReleases = albums.filter(album => {
-      const releaseDate = new Date(album.releaseDate);
+      if (!album.release_date) return false;
+      const releaseDate = new Date(album.release_date);
       return releaseDate >= sixMonthsAgo;
-    });
+    }).slice(0, parseInt(limit));
+
+    // If Spotify returns no recent releases, try Last.fm
+    if (!recentReleases || recentReleases.length === 0) {
+      console.log(`[Controller] No recent Spotify releases for ${id}, trying Last.fm`);
+
+      const artistInfo = await spotifyService.getArtistById(id);
+      if (artistInfo && artistInfo.name) {
+        const lastfmAlbums = await lastfmService.getArtistTopAlbums(artistInfo.name, parseInt(limit));
+
+        if (lastfmAlbums && lastfmAlbums.length > 0) {
+          console.log(`[Controller] Found ${lastfmAlbums.length} albums from Last.fm for ${artistInfo.name}`);
+          return res.json({
+            artistId: id,
+            albums: lastfmAlbums.slice(0, parseInt(limit)),
+            source: 'lastfm'
+          });
+        }
+      }
+    }
 
     res.json({
       artistId: id,
-      total: recentReleases.length,
-      releases: recentReleases
+      albums: recentReleases,
+      source: 'spotify'
     });
 
   } catch (error) {

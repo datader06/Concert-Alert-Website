@@ -1,1 +1,33 @@
-/* Concert card styles if needed */
+/* Concert Card Styles */
+
+.concert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.concert-artist {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #fff;
+    flex: 1;
+}
+
+.concert-source-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.concert-source-badge.ticketmaster {
+    background: linear-gradient(135deg, #026cdf, #0353a4);
+    color: #fff;
+}
