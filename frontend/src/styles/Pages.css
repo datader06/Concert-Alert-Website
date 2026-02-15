@@ -1,0 +1,128 @@
+/* Pages specific overrides */
+
+/* Home Page Layout */
+.home-page {
+    padding-bottom: 40px;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    padding: 80px 20px;
+    text-align: center;
+    border-radius: 12px;
+    margin: 20px;
+    border: 1px solid rgba(29, 185, 84, 0.2);
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin: 0 0 16px 0;
+    background: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-content p {
+    font-size: 1.25rem;
+    color: #b3b3b3;
+    margin: 0;
+}
+
+/* Trending Section */
+.trending-section,
+.new-releases-section {
+    padding: 40px 20px;
+}
+
+.trending-section h2,
+.new-releases-section h2 {
+    font-size: 2rem;
+    margin: 0 0 24px 0;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Artists Grid */
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+/* Albums Grid for New Releases */
+.albums-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .artists-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .albums-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 60px 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .artists-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+    }
+
+    .albums-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
+    }
+
+    .trending-section h2,
+    .new-releases-section h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .artists-grid,
+    .albums-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .hero-section {
+        padding: 40px 16px;
+        margin: 12px;
+    }
+
+    .trending-section,
+    .new-releases-section {
+        padding: 24px 12px;
+    }
+}

@@ -1,0 +1,67 @@
+// ADD THIS TO THE END OF api.js (after notificationService)
+
+// NEW: Album Service (Stage 2)
+export const albumService = {
+  getAlbum: async (albumId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/albums/${albumId}`);
+      const data = await response.json();
+      return { ok: response.ok, data };
+    } catch (error) {
+      console.error('Error fetching album:', error);
+      return { ok: false, error: error.message };
+    }
+  },
+
+  getArtistAlbums: async (artistId, types = 'album,single', limit = 50) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/artists/${artistId}/albums?types=${types}&limit=${limit}`
+      );
+      const data = await response.json();
+      return { ok: response.ok, data: data.albums || [] };
+    } catch (error) {
+      console.error('Error fetching artist albums:', error);
+      return { ok: false, data: [], error: error.message };
+    }
+  },
+
+  getLatestReleases: async (artistId) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/artists/${artistId}/latest-releases`
+      );
+      const data = await response.json();
+      return { ok: response.ok, data: data.releases || [] };
+    } catch (error) {
+      console.error('Error fetching latest releases:', error);
+      return { ok: false, data: [], error: error.message };
+    }
+  },
+
+  resolveArtist: async (artistName) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/artists/resolve?name=${encodeURIComponent(artistName)}`
+      );
+      const data = await response.json();
+      return { ok: response.ok, data };
+    } catch (error) {
+      console.error('Error resolving artist:', error);
+      return { ok: false, error: error.message };
+    }
+  },
+
+  getArtistMetadata: async (artistId, type = 'spotify') => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/artists/${artistId}/metadata?type=${type}`
+      );
+      const data = await response.json();
+      return { ok: response.ok, data };
+    } catch (error) {
+      console.error('Error fetching artist metadata:', error);
+      return { ok: false, error: error.message };
+    }
+  }
+};
